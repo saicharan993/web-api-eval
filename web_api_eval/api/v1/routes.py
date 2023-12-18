@@ -88,17 +88,21 @@ def update_user():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return create_response(None,"Please provide user id of user.")
     if not username or not password:
         return create_response(None,"Please provide username and password."), 400
     
-    user_old = User.query.filter_by(username=username).first()
-    if not user_old:
-        return create_response(None,"User not found."), 404
-    
-    user_old.password = password
-    db.session.commit()
-    return create_response(user_old,None)
+    if user_id:
+        user = User.query.filter_by(id=user_id).first()
+        if user:
+            user.username = username
+            user.password = password
+            db.session.commit()
+            return create_response(user,None)
+        elif not user:
+            return create_response(None,"No user found for requested user_id")
     
 
 # Handle DELETE request
