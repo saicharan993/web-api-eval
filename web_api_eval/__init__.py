@@ -11,15 +11,10 @@ load_dotenv(dotenv_path=dotenv_path)
 
 print(os.getenv("ENV"))
 
-
-
 if os.getenv("ENV")=="DEV":
     env_config = dev_config.dev_config()
 if os.getenv("ENV")=="PROD":
     env_config = prod_config.prod_config()
-
-
-
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
