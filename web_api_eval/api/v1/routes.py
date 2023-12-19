@@ -1,6 +1,6 @@
 from flask import Blueprint
 from web_api_eval.models.user_model import User
-from flask import Flask, request, jsonify,flash
+from flask import Flask, request, jsonify
 from web_api_eval import db
 from web_api_eval.utils.authtoken import token_required
 import hashlib 

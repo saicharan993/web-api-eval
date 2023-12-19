@@ -1,0 +1,85 @@
+name: Build AWS Infrastructure and Deploy Dockerized Flask-App on it.
+
+on:
+  # push:
+  #   paths:
+  #     - 'Terraform/**'
+  #   branches: [ "main" ]
+
+  workflow_dispatch: # Allow to run this workflow manually from the Actions tab
+    inputs:
+      trigger:
+        description: "apply OR destroy" # apply to build infra, destroy to destroy it all.
+        required: true
+        default: apply # will choose the word apply for you when triggering the pipeline manually.
+        type: choice
+        options:
+        - apply
+        - destroy
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # AWS User Credentials.
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # AWS User Credentials.
+  AWS_REGION: us-east-1 # just to be used in ECR but every thing else in eu-south-1
+  #TRIGGER: 'apply' # Make it 'apply' to build AWS infra, and 'destroy' to destroy it all. "auto_workflow (on Push)"
+  TRIGGER: '${{ inputs.trigger }}' # "manual workflow"
+
+jobs:
+  build-aws-infra:
+    runs-on: ubuntu-latest
+       
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+
+     - name: Login to AWS ECR Public
+      if: env.TRIGGER == 'apply'
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v1    
+      with:
+        registry-type: public
+    
+    - name: Build and Push Docker Image
+      if: env.TRIGGER == 'apply'
+      env:
+        REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        REGISTRY_ALIAS: g4x4w1s3
+        REPOSITORY: "ID.dkr.REGION.amazonaws.com"
+        IMAGE_TAG: "flask-app"
+      run: |
+        docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+      working-directory: .
+    
+    
+    # Unnecessary step, because terraform is already installed on GitHub runner    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
+ 
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      working-directory: ./infrasture
+    
+    # Checks that all Terraform configuration files in the correct format
+    - name: Terraform Format
+      run: |-
+        terraform fmt -recursive
+        terraform fmt -check
+      working-directory: ./infrasture
+
+
+    - name: Terraform ${{ env.TRIGGER }}
+      id: apply-or-destroy # id only can have static name not changing name.
+      run: |-
+        terraform $TRIGGER
+      working-directory: ./infrasture
+
+
+
+ 
+          
+ 
