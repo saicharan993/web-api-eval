@@ -44,7 +44,9 @@ To run the app locally clone the repo and run following commands. ( requires doc
 | api_1.get_users    | GET | /api/v1/user |
 | api_1.update_user  | PUT | /api/v1/user  |
 | health_check.get_status | GET|/status   |
-        
+
+
+* Devops assessment api ```/api/v2/dictionary?word=hello```. Replace hello with word of choice to fetch definition
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
