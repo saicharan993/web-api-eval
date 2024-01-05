@@ -39,13 +39,20 @@ To run the app locally clone the repo and run following commands. ( requires doc
 
 | Routes        | Method           | End point  |
 | ------------- |:-------------:| -----:|
-|  api_1.create_user | POST | /api/v1/user |
-| api_1.delete_users | DELETE | /api/v1/user |
-| api_1.get_users    | GET | /api/v1/user |
-| api_1.update_user  | PUT | /api/v1/user  |
+|  api_1.create_user | POST | /<string:tenant_name>/api/v1/user |
+| api_1.delete_users | DELETE | /<string:tenant_name>//api/v1/user |
+| api_1.get_users    | GET | /<string:tenant_name>/api/v1/user |
+| api_1.update_user  | PUT | /<string:tenant_name>/api/v1/user  |
 | health_check.get_status | GET|/status   |
+|tenant.create_tenant  | POST| /tenant |
+|tenant.get_tenants    | GET | /tenant |
 
-
+*/default/api/v1/user - accepts token included in assessment. other tenants accept token provided during tenant creation
+* payload for creating tenant:
+    {
+        "name":"tenant1",
+        "token":"sdfg345"
+    }
 * Devops assessment api ```/api/v2/dictionary?word=hello```. Replace hello with word of choice to fetch definition
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

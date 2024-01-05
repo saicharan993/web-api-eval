@@ -3,6 +3,7 @@ import jwt
 from flask import request, abort
 from flask import current_app
 from web_api_eval.config import prod_config
+from web_api_eval import default_token
 
 def token_required(f):
     @wraps(f)
@@ -16,7 +17,7 @@ def token_required(f):
                 "error": "Unauthorized"
             }, 401
         try:
-            if token!= prod_config.prod_config().AUTHTOKEN:
+            if token!= default_token:
                 return {
                 "message": "Invalid Authentication token!",
                 "error": "Unauthorized"
