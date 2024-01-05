@@ -39,10 +39,10 @@ To run the app locally clone the repo and run following commands. ( requires doc
 
 | Routes        | Method           | End point  |
 | ------------- |:-------------:| -----:|
-|  api_1.create_user | POST | /<string:tenant_name>/api/v1/user |
-| api_1.delete_users | DELETE | /<string:tenant_name>//api/v1/user |
-| api_1.get_users    | GET | /<string:tenant_name>/api/v1/user |
-| api_1.update_user  | PUT | /<string:tenant_name>/api/v1/user  |
+|  api_1.create_user | POST | /tenant_name>/api/v1/user |
+| api_1.delete_users | DELETE | /tenant_name>/api/v1/user |
+| api_1.get_users    | GET | /tenant_name>/api/v1/user |
+| api_1.update_user  | PUT | /tenant_name>/api/v1/user  |
 | health_check.get_status | GET|/status   |
 |tenant.create_tenant  | POST| /tenant |
 |tenant.get_tenants    | GET | /tenant |
